@@ -9,14 +9,19 @@ export default class App extends Component {
       height: '100vh'
     };
     const headerStyle = {
-      color: 'rgb(255, 1, 175)',
       height: '40px',
       margin: '10px'
+    };
+    const linkStyle = {
+      color: 'rgb(255, 1, 175)',
+      textDecoration: 'none'
     };
 
     return (
       <div style={ containerStyle }>
-        <h1 style={ headerStyle }>Hex-a-plex</h1>
+        <h1 style={ headerStyle }>
+          <a href="https://github.com/limscoder/hexaplex" style={ linkStyle }>Hex-a-plex</a>
+        </h1>
         <Hexagons />
       </div>
     );
