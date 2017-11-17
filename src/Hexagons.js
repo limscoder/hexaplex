@@ -41,19 +41,15 @@ function hexFill(d) {
 }
 
 function toggleHex(target, hex) {
-  const isTarget = hex.col === target.col && hex.row === target.row;
-  if (isTarget) {
-    return { ...hex, active: !target.active };
-  }
-
   const firstColIdx = target.row % 2 ? 0 : -1;
   const secondColIdx = target.row % 2 ? 1 : 0;
   const isNeighbor =
+    (hex.col === target.col && hex.row === target.row) || // target
     (hex.row === target.row - 1 && (hex.col === target.col + firstColIdx || hex.col === target.col + secondColIdx)) || // above row
     (hex.row === target.row && (hex.col === target.col - 1 || hex.col === target.col + 1)) || // same row
     (hex.row === target.row + 1 && (hex.col === target.col + firstColIdx || hex.col === target.col + secondColIdx)); // below row
   if (isNeighbor) {
-    return { ...hex, active: target.active };
+    return { ...hex, active: !hex.active };
   }
 
   return hex;
