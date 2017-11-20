@@ -63,7 +63,29 @@ export default class Hexagons extends Component {
 
   componentDidMount() {
     this.hexGroup = d3.select(this.svg).append('g');
-    this.renderHexes();
+    this.hexGroup.selectAll('.hex')
+      .data(this.state.hexData)
+      .enter()
+      .append('svg:a')
+        .attr('class', 'hex')
+        .attr('href', '')
+        .on('click', d => {
+          d3.event.preventDefault();
+          d3.event.stopPropagation();
+          this.setState({
+            hexData: this.state.hexData.map(hex => toggleHex(d, hex))
+          });
+        })
+        .append('path')
+          .attr('d', hexPath)
+          .attr('fill', hexFill)
+          .attr('stroke', 'transparent')
+          .attr('stroke-width', 4)
+          .attr('transform', d => {
+            const cx = (d.col * r * 2) + (d.row % 2 ? r * 2 : r);
+            const cy = (d.row * r * 1.75) + r;
+            return `translate(${cx}, ${cy}) rotate(90 0 0)`;
+          });
 
     const svgBox = this.svg.getBoundingClientRect();
     const hexBox = this.hexGroup.node().getBBox();
@@ -76,50 +98,17 @@ export default class Hexagons extends Component {
   }
 
   componentDidUpdate() {
-    this.renderHexes();
+    this.hexGroup
+      .selectAll('.hex')
+      .data(this.state.hexData)
+      .select('path')
+        .transition()
+        .duration(transitionDuration)
+        .attr('fill', hexFill);
   }
 
   render() {
     const hexStyle = { flex: 1 };
     return <svg ref={ svg => this.svg = svg } style={ hexStyle }/>;
-  }
-
-  renderHexes() {
-    const hexes = this.hexGroup
-      .selectAll('.hex')
-      .data(this.state.hexData);
-
-    // draw hexlinks
-    this.appendHexLinks(hexes.enter());
-
-    // update hexlink colors
-    hexes.select('path')
-      .transition()
-      .duration(transitionDuration)
-      .attr('fill', hexFill);
-  }
-
-  appendHexLinks(selection) {
-    const hexlink = selection.append('svg:a')
-      .attr('class', 'hex')
-      .attr('href', '')
-      .on('click', d => {
-        d3.event.preventDefault();
-        d3.event.stopPropagation();
-        this.setState({
-          hexData: this.state.hexData.map(hex => toggleHex(d, hex))
-        });
-      });
-  
-    hexlink.append('path')
-      .attr('d', hexPath)
-      .attr('fill', hexFill)
-      .attr('stroke', 'transparent')
-      .attr('stroke-width', 4)
-      .attr('transform', d => {
-        const cx = (d.col * r * 2) + (d.row % 2 ? r * 2 : r);
-        const cy = (d.row * r * 1.75) + r;
-        return `translate(${cx}, ${cy}) rotate(90 0 0)`;
-      });
   }
 }
