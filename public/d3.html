@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>D3 Visualization</title>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <script>
+        var r = 30;
+        var hexPath = 'M15,25.980762113533157C13.5,26.846787517317594,-13.5,26.846787517317594,-15,25.980762113533157C-16.5,25.11473670974872,-30,1.7320508075688767,-30,0C-30,-1.7320508075688767,-16.5,-25.11473670974872,-15,-25.980762113533157C-13.5,-26.846787517317594,13.5,-26.846787517317594,15,-25.980762113533157C16.5,-25.11473670974872,30,-1.7320508075688767,30,0C30,1.7320508075688767,16.5,25.11473670974872,15,25.980762113533157';
+        var hexColors = ['purple', 'blue', 'green', 'red', 'yellow'];
+        var hexagons = [{
+          color: hexColors[0],
+          focused: false
+        }];
+  
+        function drawHexagons() {
+          var svg = d3.select('#hexagons');
+          svg.transition()
+            .duration(500)
+            .style('height', (hexagons.length * r * 2))
+            .style('width', r * 6);
+
+          var selection = svg.selectAll('.hex')
+            .data(hexagons);
+
+          selection.enter()
+              .append('path')
+                .attr('class', 'hex')
+                .attr('d', hexPath)
+                .attr('fill', function(d) { return d.color; })
+                .attr('transform', function (d, idx) {
+                  return 'translate(' + (r * 4) + ', ' + (r + 4 + (r * 2 * idx)) + ')';
+                  })
+                .on('mouseenter', function(d) {
+                  d.focused = true;
+                  drawHexagons();
+                })
+                .on('mouseleave', function(d) {
+                  d.focused = false;
+                  drawHexagons();
+                });
+
+          selection.transition()
+            .duration(300)
+            .style('opacity', function(d) {
+              if (d.focused) {
+                return 0.5;
+              }
+
+              return 1;
+            });
+
+          selection.exit()
+            .transition()
+              .duration(500)
+              .attr('fill', 'black')
+              .remove();
+          }
+
+        function bindButtons() {
+          d3.select('#add-hex')
+            .on('click', function() {
+              hexagons.push({
+                color: hexColors[hexagons.length % hexColors.length],
+                focused: false
+              });
+              drawHexagons();
+            });
+
+          d3.select('#remove-hex')
+            .on('click', function() {
+              hexagons.pop();
+              drawHexagons();
+            });
+        }
+      </script>
+  </head>
+  <body>
+    <h1>SVG Visualization with D3 and React</h1>
+    <h3>Dave Thompson - @limscoder</h3>
+    <h3><a href="https://github.com/limscoder/hexaplex">https://github.com/limscoder/hexaplex</a></h3>
+    <ul>
+      <li><a href="https://github.com/d3/d3/wiki/Gallery">D3 gallery</a></li>
+      <li><a href="https://limscoder.github.io/hexaplex/">Hexaplex app</a></li>
+      <li><a href="https://blog.freshtracks.io/an-introduction-to-d3-data-binding-part-1-1fe1418b958a">D3 + React blog</a></li>
+      <li><a href="https://medium.com/@coldpour/deleting-2000-lines-of-javascript-with-svg-424b89c6e466">SVG psuedo-3d lighting blog</a></li>
+    </ul>
+    <div>
+      <button id="add-hex">Add Hexagon</button>
+      <button id="remove-hex">Remove Hexagon</button>
+    </div>
+    <svg id="hexagons" style="height: 0"></svg>
+  </body>
+  <script>
+    drawHexagons();
+    bindButtons();
+  </script>
+</html>
