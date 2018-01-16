@@ -17,10 +17,6 @@
   
         function drawHexagons() {
           var svg = d3.select('#hexagons');
-          svg.transition()
-            .duration(500)
-            .style('height', (hexagons.length * r * 2))
-            .style('width', r * 6);
 
           var selection = svg.selectAll('.hex')
             .data(hexagons);
@@ -54,10 +50,15 @@
 
           selection.exit()
             .transition()
-              .duration(500)
+              .duration(700)
               .attr('fill', 'black')
               .remove();
-          }
+
+          svg.transition()
+            .duration(700)
+            .style('height', (hexagons.length * r * 2))
+            .style('width', r * 6);
+        }
 
         function bindButtons() {
           d3.select('#add-hex')
