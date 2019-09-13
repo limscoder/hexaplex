@@ -11,7 +11,7 @@
     src="http://postcss.github.io/postcss/logo.svg">
   <a href="https://github.com/webpack/webpack">
     <img width="200" height="200" hspace="10"
-      src="https://cdn.rawgit.com/webpack/media/e7485eb2/logo/icon.svg">
+      src="https://cdn.jsdelivr.net/gh/webpack/media@e7485eb2/logo/icon.svg">
   </a>
   <div align="center">
     <a href="https://evilmartians.com/?utm_source=postcss">
